@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import Button from '../../ui/Button';
 import ButtonGroup from '../../ui/ButtonGroup';
 import ButtonText from '../../ui/ButtonText';
-import Heading from '../../ui/Header';
+import Heading from '../../ui/Heading';
 import Row from '../../ui/Row';
 import Tag from '../../ui/Tag';
 import BookingDataBox from './BookingDataBox';
