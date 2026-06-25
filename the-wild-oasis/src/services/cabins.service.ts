@@ -10,3 +10,11 @@ export const getCabins = async (): Promise<ICabin[]> => {
 
     return data as ICabin[];
 };
+
+export const deleteCabin = async (id: number): Promise<void> => {
+    const { error } = await supabase.from('cabins').delete().eq('id', id);
+
+    if (error) {
+        throw new Error(error.message);
+    }
+};
