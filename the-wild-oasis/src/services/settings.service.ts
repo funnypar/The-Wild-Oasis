@@ -19,7 +19,6 @@ export async function updateSetting(newSetting: ISettings) {
     const { data, error } = await supabase
         .from('settings')
         .update(newSetting)
-        // There is only ONE row of settings, and it has the ID=1, and so this is the updated one
         .eq('id', 1)
         .single();
 

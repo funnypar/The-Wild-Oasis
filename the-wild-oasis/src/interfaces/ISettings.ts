@@ -1,6 +1,6 @@
 export interface ISettings {
-    id: number;
-    created_at: Date;
+    id?: number;
+    created_at?: Date;
     minBookingLength: number;
     maxBookingLength: number;
     maxGuestsPerBooking: number;
