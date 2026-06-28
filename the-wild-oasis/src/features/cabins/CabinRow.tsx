@@ -1,11 +1,10 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import toast from 'react-hot-toast';
+import { HiPencil, HiTrash } from 'react-icons/hi2';
 import styled from 'styled-components';
 import type ICabin from '../../interfaces/ICabin';
-import { deleteCabin } from '../../services/cabins.service';
 import { formatCurrency } from '../../utils/helpers';
 import CreateCabinForm from './CreateCabinForm';
+import { useDeleteCabin } from './hooks/useDeleteCabin';
 
 const TableRow = styled.div`
     display: grid;
@@ -55,17 +54,7 @@ type Props = {
 export default function CabinRow({ cabin }: Props) {
     const [showEditForm, setShowEditForm] = useState(false);
 
-    const queryClient = useQueryClient();
-    const { isPending: isDeleting, mutate } = useMutation({
-        mutationFn: (id: number) => deleteCabin(id),
-        onSuccess: () => {
-            toast.success('Cabin successfully deleted');
-            queryClient.invalidateQueries({
-                queryKey: ['cabins'],
-            });
-        },
-        onError: (err) => toast.error(err.message),
-    });
+    const { isDeleting, mutate } = useDeleteCabin();
 
     return (
         <>
@@ -77,13 +66,13 @@ export default function CabinRow({ cabin }: Props) {
                 <Discount>{formatCurrency(cabin.discount)}</Discount>
                 <div>
                     <button onClick={() => setShowEditForm((show) => !show)}>
-                        Edit
+                        <HiPencil />
                     </button>
                     <button
                         onClick={() => mutate(cabin.id)}
                         disabled={isDeleting}
                     >
-                        Delete
+                        <HiTrash />
                     </button>
                 </div>
             </TableRow>
