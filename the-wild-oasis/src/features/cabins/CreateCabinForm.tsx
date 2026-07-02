@@ -22,9 +22,10 @@ type CreateCabinFormData = {
 
 type CreateCabinFormProps = {
     cabinToEdit: ICabin | null;
+    onClose?: () => void;
 };
 
-function CreateCabinForm({ cabinToEdit }: CreateCabinFormProps) {
+function CreateCabinForm({ cabinToEdit, onClose }: CreateCabinFormProps) {
     const editId = cabinToEdit?.id;
     const isEditSession = Boolean(editId);
 
@@ -64,13 +65,21 @@ function CreateCabinForm({ cabinToEdit }: CreateCabinFormProps) {
         };
 
         if (isEditSession)
-            editCabin({
-                newCabinData: newCabin,
-                id: editId!,
-            });
+            editCabin(
+                {
+                    newCabinData: newCabin,
+                    id: editId!,
+                },
+                {
+                    onSuccess: () => onClose?.(),
+                },
+            );
         else
             createCabin(newCabin, {
-                onSuccess: () => reset(),
+                onSuccess: () => {
+                    reset();
+                    onClose?.();
+                },
             });
     }
 
@@ -79,7 +88,10 @@ function CreateCabinForm({ cabinToEdit }: CreateCabinFormProps) {
     }
 
     return (
-        <Form onSubmit={handleSubmit(onSubmit, onError)}>
+        <Form
+            onSubmit={handleSubmit(onSubmit, onError)}
+            type={onClose ? 'modal' : 'regular'}
+        >
             <FormRow label='Cabin name' error={errors.name?.message}>
                 <Input
                     id='name'
@@ -164,7 +176,11 @@ function CreateCabinForm({ cabinToEdit }: CreateCabinFormProps) {
             </FormRow>
 
             <FormRow>
-                <Button variation='secondary' type='reset'>
+                <Button
+                    variation='secondary'
+                    type='reset'
+                    onClick={() => onClose?.()}
+                >
                     Cancel
                 </Button>
 
