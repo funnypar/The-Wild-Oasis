@@ -1,6 +1,11 @@
+import type { BaseSyntheticEvent, PropsWithChildren } from 'react';
 import styled, { css } from 'styled-components';
 
-const StyledForm = styled.form`
+type StyledFormProps = {
+    type: 'modal' | 'regular';
+};
+
+const StyledForm = styled.form<StyledFormProps>`
     ${(props) =>
         props.type === 'regular' &&
         css`
@@ -17,15 +22,24 @@ const StyledForm = styled.form`
         css`
             width: 80rem;
         `}
-    
-  overflow: hidden;
+
+    overflow: hidden;
     font-size: 1.4rem;
 `;
 
-type FormProps = {
-    type: 'modal' | 'regular';
-};
+type FormProps = PropsWithChildren<{
+    type?: 'modal' | 'regular';
+    onSubmit?: (e?: BaseSyntheticEvent) => Promise<void> | void;
+}>;
 
-export default function Form({ type = 'regular' }: FormProps) {
-    return <StyledForm type={type} />;
+export default function Form({
+    type = 'regular',
+    onSubmit,
+    children,
+}: FormProps) {
+    return (
+        <StyledForm type={type} onSubmit={onSubmit}>
+            {children}
+        </StyledForm>
+    );
 }
