@@ -21,8 +21,8 @@ type CreateCabinFormData = {
 };
 
 type CreateCabinFormProps = {
-    cabinToEdit: ICabin | null;
-    onClose?: () => void;
+    cabinToEdit?: ICabin | null;
+    onClose?: () => void | null;
 };
 
 function CreateCabinForm({ cabinToEdit, onClose }: CreateCabinFormProps) {
@@ -51,6 +51,7 @@ function CreateCabinForm({ cabinToEdit, onClose }: CreateCabinFormProps) {
     const { isEditing, editCabin } = useEditCabin();
 
     const isWorking = isCreating || isEditing;
+
     function onSubmit(data: CreateCabinFormData) {
         const image =
             typeof data.image === 'string' ? data.image : data.image[0];
@@ -64,7 +65,7 @@ function CreateCabinForm({ cabinToEdit, onClose }: CreateCabinFormProps) {
             image: image,
         };
 
-        if (isEditSession)
+        if (isEditSession) {
             editCabin(
                 {
                     newCabinData: newCabin,
@@ -74,13 +75,14 @@ function CreateCabinForm({ cabinToEdit, onClose }: CreateCabinFormProps) {
                     onSuccess: () => onClose?.(),
                 },
             );
-        else
+        } else {
             createCabin(newCabin, {
                 onSuccess: () => {
                     reset();
                     onClose?.();
                 },
             });
+        }
     }
 
     function onError(errors: FieldErrors<CreateCabinFormData>) {
@@ -176,17 +178,18 @@ function CreateCabinForm({ cabinToEdit, onClose }: CreateCabinFormProps) {
             </FormRow>
 
             <FormRow>
-                <Button
-                    variation='secondary'
-                    type='reset'
-                    onClick={() => onClose?.()}
-                >
-                    Cancel
-                </Button>
-
-                <Button disabled={isWorking}>
-                    {isEditSession ? 'Edit cabin' : 'Create cabin'}
-                </Button>
+                <>
+                    <Button
+                        variation='secondary'
+                        type='reset'
+                        onClick={() => onClose?.()}
+                    >
+                        Cancel
+                    </Button>
+                    <Button disabled={isWorking}>
+                        {isEditSession ? 'Edit cabin' : 'Create cabin'}
+                    </Button>
+                </>
             </FormRow>
         </Form>
     );
