@@ -1,6 +1,7 @@
 import { HiPencil, HiTrash } from 'react-icons/hi2';
 import styled from 'styled-components';
 import type ICabin from '../../interfaces/ICabin';
+import ConfirmDelete from '../../ui/ConfirmDelete';
 import Modal from '../../ui/Modal';
 import { formatCurrency } from '../../utils/helpers';
 import CreateCabinForm from './CreateCabinForm';
@@ -71,11 +72,20 @@ export default function CabinRow({ cabin }: Props) {
                     <Modal.Window name='edit'>
                         <CreateCabinForm cabinToEdit={cabin} />
                     </Modal.Window>
-                </Modal>
 
-                <button onClick={() => mutate(cabin.id)} disabled={isDeleting}>
-                    <HiTrash />
-                </button>
+                    <Modal.Open opens='delete'>
+                        <button disabled={isDeleting}>
+                            <HiTrash />
+                        </button>
+                    </Modal.Open>
+                    <Modal.Window name='delete'>
+                        <ConfirmDelete
+                            resourceName='cabin'
+                            disabled={isDeleting}
+                            onConfirm={() => mutate(cabin.id)}
+                        />
+                    </Modal.Window>
+                </Modal>
             </div>
         </TableRow>
     );
