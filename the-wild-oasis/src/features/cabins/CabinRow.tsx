@@ -1,7 +1,7 @@
-import { useState } from 'react';
 import { HiPencil, HiTrash } from 'react-icons/hi2';
 import styled from 'styled-components';
 import type ICabin from '../../interfaces/ICabin';
+import Modal from '../../ui/Modal';
 import { formatCurrency } from '../../utils/helpers';
 import CreateCabinForm from './CreateCabinForm';
 import { useDeleteCabin } from './hooks/useDeleteCabin';
@@ -52,31 +52,31 @@ type Props = {
 };
 
 export default function CabinRow({ cabin }: Props) {
-    const [showEditForm, setShowEditForm] = useState(false);
-
     const { isDeleting, mutate } = useDeleteCabin();
 
     return (
-        <>
-            <TableRow role='row'>
-                <Img src={cabin.image} alt={cabin.name} />
-                <Cabin>{cabin.name}</Cabin>
-                <div>Fits up to {cabin.maxCapacity} guests</div>
-                <Price>{formatCurrency(cabin.regularPrice)}</Price>
-                <Discount>{formatCurrency(cabin.discount)}</Discount>
-                <div>
-                    <button onClick={() => setShowEditForm((show) => !show)}>
-                        <HiPencil />
-                    </button>
-                    <button
-                        onClick={() => mutate(cabin.id)}
-                        disabled={isDeleting}
-                    >
-                        <HiTrash />
-                    </button>
-                </div>
-            </TableRow>
-            {showEditForm && <CreateCabinForm cabinToEdit={cabin} />}
-        </>
+        <TableRow role='row'>
+            <Img src={cabin.image} alt={cabin.name} />
+            <Cabin>{cabin.name}</Cabin>
+            <div>Fits up to {cabin.maxCapacity} guests</div>
+            <Price>{formatCurrency(cabin.regularPrice)}</Price>
+            <Discount>{formatCurrency(cabin.discount)}</Discount>
+            <div>
+                <Modal>
+                    <Modal.Open opens='edit'>
+                        <button>
+                            <HiPencil />
+                        </button>
+                    </Modal.Open>
+                    <Modal.Window name='edit'>
+                        <CreateCabinForm cabinToEdit={cabin} />
+                    </Modal.Window>
+                </Modal>
+
+                <button onClick={() => mutate(cabin.id)} disabled={isDeleting}>
+                    <HiTrash />
+                </button>
+            </div>
+        </TableRow>
     );
 }
