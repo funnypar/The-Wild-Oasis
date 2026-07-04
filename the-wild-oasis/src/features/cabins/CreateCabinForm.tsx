@@ -178,18 +178,9 @@ function CreateCabinForm({ cabinToEdit, onClose }: CreateCabinFormProps) {
             </FormRow>
 
             <FormRow>
-                <>
-                    <Button
-                        variation='secondary'
-                        type='reset'
-                        onClick={() => onClose?.()}
-                    >
-                        Cancel
-                    </Button>
-                    <Button disabled={isWorking}>
-                        {isEditSession ? 'Edit cabin' : 'Create cabin'}
-                    </Button>
-                </>
+                <Button disabled={isWorking}>
+                    {isEditSession ? 'Edit cabin' : 'Create cabin'}
+                </Button>
             </FormRow>
         </Form>
     );

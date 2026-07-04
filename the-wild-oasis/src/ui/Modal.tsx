@@ -2,6 +2,8 @@ import {
     cloneElement,
     createContext,
     useContext,
+    useEffect,
+    useRef,
     useState,
     type ReactNode,
 } from 'react';
@@ -95,12 +97,34 @@ function Open({ children, opens }: { children: ReactNode; opens: string }) {
 
 function Window({ children, name }: ModalProps) {
     const { openName, closeModal } = useContext(ModalContext);
+    const ref = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        const handleEsc = (event: KeyboardEvent) => {
+            if (event.key === 'Escape') {
+                closeModal();
+            }
+        };
+        const handleClick = (event: MouseEvent) => {
+            if (ref.current && !ref.current.contains(event.target as Node)) {
+                closeModal();
+            }
+        };
+
+        window.addEventListener('keydown', handleEsc);
+        window.addEventListener('click', handleClick, true);
+
+        return () => {
+            window.removeEventListener('keydown', handleEsc);
+            window.removeEventListener('click', handleClick);
+        };
+    }, [closeModal]);
 
     if (name !== openName) return null;
 
     return createPortal(
         <Overlay>
-            <StyledModal>
+            <StyledModal ref={ref}>
                 <Button onClick={closeModal}>
                     <HiXMark />
                 </Button>
