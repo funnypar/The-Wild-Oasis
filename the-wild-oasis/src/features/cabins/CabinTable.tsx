@@ -9,6 +9,8 @@ export default function CabinTable() {
     const { isLoading, cabins } = useCabins();
     const [searchParams] = useSearchParams();
 
+    // Filter
+
     const filteredCabins = searchParams.get('filter') || 'all';
 
     let filteredCabinsList: ICabin[] | undefined = cabins;
@@ -20,6 +22,18 @@ export default function CabinTable() {
     } else if (filteredCabins === 'with-discount') {
         filteredCabinsList = cabins!.filter((cabin) => cabin.discount > 0);
     }
+
+    // Sort
+
+    const sortBy = searchParams.get('sortBy') || 'name-asc';
+
+    const [field, direction] = sortBy.split('-');
+
+    const modifier = direction === 'asc' ? 1 : -1;
+
+    const sortedCabinsList = filteredCabinsList?.sort(
+        (a, b) => (a[field] - b[field]) * modifier,
+    );
 
     if (isLoading) return <Spinner />;
     return (
@@ -33,7 +47,7 @@ export default function CabinTable() {
                 <div></div>
             </Table.Header>
             <Table.Body
-                data={filteredCabinsList}
+                data={sortedCabinsList}
                 render={(cabin) => <CabinRow cabin={cabin} key={cabin.id} />}
             />
         </Table>
