@@ -1,13 +1,16 @@
-import type IBooking from '../../interfaces/IBooking';
 import Empty from '../../ui/Empty';
 import Menus from '../../ui/Menus';
+import Spinner from '../../ui/Spinner';
 import Table from '../../ui/Table';
 import BookingRow from './BookingRow';
+import { useBookings } from './hooks/useBookings';
 
 function BookingTable() {
-    const bookings: IBooking[] = [];
+    const { bookings, isLoading } = useBookings();
 
-    if (!bookings.length) return <Empty resource='bookings' />;
+    if (isLoading) return <Spinner />;
+
+    if (!bookings!.length) return <Empty resource='bookings' />;
 
     return (
         <Menus>

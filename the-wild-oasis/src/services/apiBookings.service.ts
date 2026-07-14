@@ -1,6 +1,20 @@
 import type { Booking } from '../data/types/types';
 import { getToday } from '../utils/helpers';
-import supabase from './supabase';
+import supabase from './supabase.service';
+
+export async function getBookings() {
+    const { data, error } = await supabase
+        .from('bookings')
+        .select('*, cabins(name), guests(fullName, email)')
+        .order('created_at', { ascending: false });
+
+    if (error) {
+        console.error(error);
+        throw new Error('Bookings could not get loaded');
+    }
+
+    return data;
+}
 
 export async function getBooking(id: number) {
     const { data, error } = await supabase
