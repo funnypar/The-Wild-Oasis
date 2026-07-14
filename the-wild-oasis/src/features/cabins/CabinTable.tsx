@@ -1,5 +1,6 @@
 import { useSearchParams } from 'react-router-dom';
 import type ICabin from '../../interfaces/ICabin';
+import Empty from '../../ui/Empty';
 import Spinner from '../../ui/Spinner';
 import Table from '../../ui/Table';
 import CabinRow from './CabinRow';
@@ -36,6 +37,7 @@ export default function CabinTable() {
     );
 
     if (isLoading) return <Spinner />;
+    if (!cabins?.length) return <Empty resource='cabins' />;
     return (
         <Table columns='0.6fr 1.8fr 2.2fr 1fr 1fr 1fr'>
             <Table.Header>
