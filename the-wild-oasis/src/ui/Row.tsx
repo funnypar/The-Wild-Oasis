@@ -6,6 +6,7 @@ interface RowProps {
 
 const Row = styled.div<RowProps>`
     display: flex;
+    margin-bottom: 1.6rem;
 
     ${(props) =>
         props.type === 'horizontal' &&

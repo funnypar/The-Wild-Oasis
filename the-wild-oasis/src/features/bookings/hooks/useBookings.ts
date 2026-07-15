@@ -13,13 +13,19 @@ export const useBookings = () => {
             ? null
             : { field: 'status', value: filterValue };
 
+    const sortByRaw = searchParams.get('sortBy') || 'startDate-desc';
+
+    // Determine the sort order
+    const [sortField, sortOrder] = sortByRaw.split('-');
+    const sortBy = { field: sortField, direction: sortOrder };
+
     const {
         data: bookings,
         isLoading,
         error,
     } = useQuery({
-        queryKey: ['bookings', filter],
-        queryFn: () => getBookings({ filter }),
+        queryKey: ['bookings', filter, sortBy],
+        queryFn: () => getBookings({ filter, sortBy }),
     });
 
     return { bookings, isLoading, error };

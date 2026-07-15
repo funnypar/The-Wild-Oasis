@@ -4,10 +4,10 @@ import supabase from './supabase.service';
 
 type BookingProps = {
     filter?: { field: string; value: string };
-    sort?: string;
+    sortBy?: { field: string; direction: string };
 };
 
-export async function getBookings({ filter, sort }: BookingProps) {
+export async function getBookings({ filter, sortBy }: BookingProps) {
     let query = supabase
         .from('bookings')
         .select('*, cabins(name), guests(fullName, email)')
@@ -15,6 +15,12 @@ export async function getBookings({ filter, sort }: BookingProps) {
 
     if (filter) {
         query = query[filter.method || 'eq'](filter.field, filter.value);
+    }
+
+    if (sortBy) {
+        query = query.order(sortBy.field, {
+            ascending: sortBy.direction === 'asc',
+        });
     }
 
     const { data, error } = await query;
