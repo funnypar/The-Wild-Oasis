@@ -6,7 +6,12 @@ export default interface IBooking {
     numNights: number;
     numGuests: number;
     cabinPrice: number;
-    extraPrice: number;
+    extrasPrice: number;
     totalPrice: number;
     status: string;
+    hasBreakfast: boolean;
+    isPaid: boolean;
+    observations?: string;
+    cabinId: number;
+    guestId: number;
 }
