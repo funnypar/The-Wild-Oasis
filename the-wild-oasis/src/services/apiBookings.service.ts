@@ -1,16 +1,18 @@
 import type { Booking } from '../data/types/types';
+import { PAGE_SIZE } from '../utils/constants';
 import { getToday } from '../utils/helpers';
 import supabase from './supabase.service';
 
 type BookingProps = {
-    filter?: { field: string; value: string };
+    filter?: { field: string; value: string; method?: string };
     sortBy?: { field: string; direction: string };
+    page?: number;
 };
 
-export async function getBookings({ filter, sortBy }: BookingProps) {
+export async function getBookings({ filter, sortBy, page }: BookingProps) {
     let query = supabase
         .from('bookings')
-        .select('*, cabins(name), guests(fullName, email)')
+        .select('*, cabins(name), guests(fullName, email)', { count: 'exact' })
         .order('created_at', { ascending: false });
 
     if (filter) {
@@ -23,14 +25,20 @@ export async function getBookings({ filter, sortBy }: BookingProps) {
         });
     }
 
-    const { data, error } = await query;
+    if (page) {
+        const from = (page - 1) * PAGE_SIZE;
+        const to = from + PAGE_SIZE - 1;
+        query = query.range(from, to);
+    }
+
+    const { data, count, error } = await query;
 
     if (error) {
         console.error(error);
         throw new Error('Bookings could not get loaded');
     }
 
-    return data;
+    return { data, count };
 }
 
 export async function getBooking(id: number) {
