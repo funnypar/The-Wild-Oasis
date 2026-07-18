@@ -15,16 +15,19 @@ export async function getBookings({ filter, sortBy, page }: BookingProps) {
         .select('*, cabins(name), guests(fullName, email)', { count: 'exact' })
         .order('created_at', { ascending: false });
 
+    // Filter
     if (filter) {
         query = query[filter.method || 'eq'](filter.field, filter.value);
     }
 
+    // Sort
     if (sortBy) {
         query = query.order(sortBy.field, {
             ascending: sortBy.direction === 'asc',
         });
     }
 
+    // Pagination
     if (page) {
         const from = (page - 1) * PAGE_SIZE;
         const to = from + PAGE_SIZE - 1;
