@@ -8,6 +8,8 @@ import Heading from '../../ui/Heading';
 import Row from '../../ui/Row';
 
 import { useMoveBack } from '../../hooks/useMoveBack';
+import Spinner from '../../ui/Spinner';
+import { useBooking } from '../bookings/hooks/useBooking';
 
 const Box = styled.div`
     /* Box */
@@ -20,23 +22,15 @@ const Box = styled.div`
 function CheckinBooking() {
     const moveBack = useMoveBack();
 
-    const booking = {};
-
-    const {
-        id: bookingId,
-        guests,
-        totalPrice,
-        numGuests,
-        hasBreakfast,
-        numNights,
-    } = booking;
+    const { booking, isLoading } = useBooking();
 
     function handleCheckin() {}
 
+    if (isLoading) return <Spinner />;
     return (
         <>
             <Row type='horizontal'>
-                <Heading as='h1'>Check in booking #{bookingId}</Heading>
+                <Heading as='h1'>Check in booking #{booking.id}</Heading>
                 <ButtonText onClick={moveBack}>&larr; Back</ButtonText>
             </Row>
 
@@ -44,7 +38,7 @@ function CheckinBooking() {
 
             <ButtonGroup>
                 <Button onClick={handleCheckin}>
-                    Check in booking #{bookingId}
+                    Check in booking #{booking.id}
                 </Button>
                 <Button variation='secondary' onClick={moveBack}>
                     Back

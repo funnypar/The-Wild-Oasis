@@ -6,6 +6,7 @@ import Account from './pages/Account';
 import Booking from './pages/Booking';
 import Bookings from './pages/Bookings';
 import Cabins from './pages/Cabins';
+import CheckIn from './pages/CheckIn';
 import Dashboard from './pages/Dashboard';
 import Login from './pages/Login';
 import PageNotFound from './pages/PageNotFound';
@@ -40,6 +41,10 @@ function App() {
                         <Route
                             path='bookings/:bookingId'
                             element={<Booking />}
+                        />
+                        <Route
+                            path='checkin/:bookingId'
+                            element={<CheckIn />}
                         />
                         <Route path='cabins' element={<Cabins />} />
                         <Route path='settings' element={<Settings />} />
