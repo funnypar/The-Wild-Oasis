@@ -55,7 +55,7 @@ export async function getBooking(id: number) {
         console.error(error);
         throw new Error('Booking not found');
     }
-
+    debugger;
     return data;
 }
 
