@@ -7,9 +7,13 @@ import ButtonText from '../../ui/ButtonText';
 import Heading from '../../ui/Heading';
 import Row from '../../ui/Row';
 
+import { useState } from 'react';
 import { useMoveBack } from '../../hooks/useMoveBack';
+import Checkbox from '../../ui/Checkbox';
 import Spinner from '../../ui/Spinner';
+import { formatCurrency } from '../../utils/helpers';
 import { useBooking } from '../bookings/hooks/useBooking';
+import useCheckIn from './hooks/useCheckIn';
 
 const Box = styled.div`
     /* Box */
@@ -20,11 +24,16 @@ const Box = styled.div`
 `;
 
 function CheckinBooking() {
-    const moveBack = useMoveBack();
-
     const { booking, isLoading } = useBooking();
+    const [isConfirmedByUser, setIsConfirmedByUser] = useState(false);
+    const moveBack = useMoveBack();
+    const { checkin, isCheckingIn } = useCheckIn();
 
-    function handleCheckin() {}
+    const confirmPaid = booking?.isPaid || isConfirmedByUser;
+    function handleCheckin() {
+        if (!confirmPaid) return;
+        checkin(booking.id);
+    }
 
     if (isLoading) return <Spinner />;
     return (
@@ -35,9 +44,23 @@ function CheckinBooking() {
             </Row>
 
             <BookingDataBox booking={booking} />
+            <Box>
+                <Checkbox
+                    disabled={booking.isPaid || isCheckingIn}
+                    id='confirm'
+                    checked={confirmPaid}
+                    onChange={() => setIsConfirmedByUser((prev) => !prev)}
+                >
+                    I confirm that {booking.guests.fullName} has paid the total
+                    amount of {formatCurrency(booking.totalPrice)}
+                </Checkbox>
+            </Box>
 
             <ButtonGroup>
-                <Button onClick={handleCheckin}>
+                <Button
+                    onClick={handleCheckin}
+                    disabled={!confirmPaid || isCheckingIn}
+                >
                     Check in booking #{booking.id}
                 </Button>
                 <Button variation='secondary' onClick={moveBack}>

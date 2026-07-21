@@ -34,8 +34,6 @@ export default function BookingDetail() {
             'checked-out': 'silver',
         };
 
-    const status = booking?.status || '';
-
     if (isLoading) return <Spinner />;
     return (
         <>
@@ -43,8 +41,8 @@ export default function BookingDetail() {
                 <HeadingGroup>
                     <Heading as='h1'>Booking #X</Heading>
 
-                    <Tag type={statusToTagName[status]}>
-                        {status.replace('-', ' ')}
+                    <Tag type={statusToTagName[booking.status]}>
+                        {booking.status.replace('-', ' ')}
                     </Tag>
                 </HeadingGroup>
 
@@ -53,7 +51,7 @@ export default function BookingDetail() {
 
             <BookingDataBox booking={booking} />
 
-            {status === 'unconfirmed' && (
+            {booking.status === 'unconfirmed' && (
                 <Button onClick={() => navigate(`/checkin/${booking.id}`)}>
                     Check in
                 </Button>

@@ -25,4 +25,5 @@ export type Booking = {
     observations: string;
     isPaid: boolean;
     numGuests: number;
+    status: string;
 };
