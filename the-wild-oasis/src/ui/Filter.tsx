@@ -45,6 +45,7 @@ export default function Filter({ filterField, options }: Props) {
 
     function handleFilterClick(filterType: string) {
         searchParams.set(filterField || 'filter', filterType);
+        if (searchParams.get('page')) searchParams.set('page', 1);
         setSearchParams(searchParams);
     }
 
